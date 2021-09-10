@@ -121,3 +121,79 @@ str(met)
     ##  $ atm.press.qc     : int  5 5 5 5 5 5 5 5 5 5 ...
     ##  $ rh               : num  19.9 21.8 18.5 16.9 17.4 ...
     ##  - attr(*, ".internal.selfref")=<externalptr>
+
+## Step 4: Take a close look
+
+``` r
+table(met$year)
+```
+
+    ## 
+    ##    2019 
+    ## 2377343
+
+``` r
+table(met$month)
+```
+
+    ## 
+    ##       8 
+    ## 2377343
+
+``` r
+table(met$day)
+```
+
+    ## 
+    ##     1     2     3     4     5     6     7     8     9    10    11    12    13 
+    ## 75975 75923 76915 76594 76332 76734 77677 77766 75366 75450 76187 75052 76906 
+    ##    14    15    16    17    18    19    20    21    22    23    24    25    26 
+    ## 77852 76217 78015 78219 79191 76709 75527 75786 78312 77413 76965 76806 79114 
+    ##    27    28    29    30    31 
+    ## 79789 77059 71712 74931 74849
+
+``` r
+table(met$hour)
+```
+
+    ## 
+    ##      0      1      2      3      4      5      6      7      8      9     10 
+    ##  99434  93482  93770  96703 110504 112128 106235 101985 100310 102915 101880 
+    ##     11     12     13     14     15     16     17     18     19     20     21 
+    ## 100470 103605  97004  96507  97635  94942  94184 100179  94604  94928  96070 
+    ##     22     23 
+    ##  94046  93823
+
+Looking at continuous variables
+
+``` r
+summary(met$temp)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##  -40.00   19.60   23.50   23.59   27.80   56.00   60089
+
+``` r
+summary(met$elev)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##   -13.0   101.0   252.0   415.8   400.0  9999.0
+
+``` r
+summary(met$wind.sp)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##    0.00    0.00    2.10    2.46    3.60   36.00   79693
+
+Updating NAs in elevation
+
+``` r
+# met$elev[met$elev == 9999.0] <- NA
+met[elev == 9999.0, elev := NA]
+summary(met$elev)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##     -13     101     252     413     400    4113     710
