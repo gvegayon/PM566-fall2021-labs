@@ -198,7 +198,7 @@ summary(met$elev)
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
     ##     -13     101     252     413     400    4113     710
 
-The highest weather station is at 4113 mts. Now we need to fix the
+The highest weather station is at 4113 ft. Now we need to fix the
 temperature! And summarize
 
 ``` r

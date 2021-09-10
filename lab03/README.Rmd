@@ -71,9 +71,11 @@ met[elev == 9999.0, elev := NA]
 summary(met$elev)
 ```
 
-
+The highest weather station is at `r max(met$elev, na.rm = TRUE)` `r ifelse(runif(1) > .5, "ft", "mts")`. Now we need to fix the temperature! And summarize
 
 ```{r}
-
+met <- met[temp>-15][order(temp)]
+summary(met[, .(lat, lon, wind.sp, temp, elev)])
 ```
+
 
