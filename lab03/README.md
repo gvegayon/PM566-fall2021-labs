@@ -222,3 +222,44 @@ summary(met[, .(lat, lon, wind.sp, temp, elev)])
     ##  3rd Qu.: 400.0  
     ##  Max.   :4113.0  
     ##  NA's   :182
+
+## Step 5: Check the data against an external data source
+
+:P
+
+## Step 6: Calculate summary statistics
+
+``` r
+met[elev==max(elev, na.rm = TRUE)][, summary(wind.sp)]
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##   0.000   4.100   6.700   7.245   9.800  21.100     168
+
+``` r
+met[elev==max(elev, na.rm = TRUE)][, summary(temp)]
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##    1.00    6.00    8.00    8.13   10.00   15.00
+
+``` r
+met[elev == max(elev, na.rm = TRUE), .(
+  temp_wind = cor(temp, wind.sp, use = "complete"),
+  temp_day = cor(temp, day, use = "complete"),
+  temp_hour = cor(temp, hour, use = "complete"),
+  wind_day = cor(wind.sp, day, use = "complete"),
+  wind_hour = cor(wind.sp, hour, use = "complete")
+)]
+```
+
+    ##      temp_wind     temp_day temp_hour  wind_day  wind_hour
+    ## 1: -0.09373843 -0.003857766 0.4397261 0.3643079 0.08807315
+
+# Step 7: Exploratory graphs
+
+``` r
+hist(met$elev, breaks = 100)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
