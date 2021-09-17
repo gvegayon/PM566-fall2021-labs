@@ -11,7 +11,13 @@ options(repos = c(CRAN = "http://cran.rstudio.com"))
 
 ## 1. Read in the data
 
-```{r}
+```{r packages}
+library(data.table)
+library(tidyverse)
+```
+
+
+```{r data-read, cache=TRUE}
 if (!file.exists("../met_all.gz"))
   download.file(
     url = "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
@@ -24,7 +30,7 @@ met <- data.table::fread("../met_all.gz")
 
 ## 2. Prepare the data
 
-```{r data-prep}
+```{r data-prep, cache=TRUE}
 # Remove temperatures less than -17C
 met <- met[temp >= -17]
 
@@ -63,8 +69,19 @@ met_avg <- met[, .(
 ), by = "USAFID"]
 
 # Create a region variable for NW, SW, NE, SE based on lon = -98.00 and lat = 39.71 degrees
-# Create a categorical variable for elevation as in the lecture slides
+met_avg[lat >= 39.71 & lon <= -98, region := "Northwest"]
+met_avg[lat < 39.71  & lon <= -98, region := "Southwest"]
+met_avg[lat >= 39.71 & lon > -98 , region := "Northeast"]
+met_avg[lat < 39.71  & lon > -98 , region := "Southeast"]
 
+met_avg[, region2 := fifelse(lat >= 39.71 & lon <= -98, "Northwest",
+        fifelse(lat < 39.71  & lon <= -98, "Southwest",
+                fifelse(lat >= 39.71 & lon > -98, "Northeast",
+                        fifelse(lat < 39.71  & lon > -98, "Southeast", NA_character_))))]
+
+met_avg[, table(region, region2, useNA = "always")]
+# Create a categorical variable for elevation as in the lecture slides
+met_avg[, elev_cat := fifelse(elev > 252, "high", "low")]
 ```
 
 
