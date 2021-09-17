@@ -1,7 +1,7 @@
 ---
 title: "Lab 4"
 output: github_document
-allways_allow_html: true
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +15,6 @@ options(repos = c(CRAN = "http://cran.rstudio.com"))
 library(data.table)
 library(tidyverse)
 ```
-
 
 ```{r data-read, cache=TRUE}
 if (!file.exists("../met_all.gz"))
@@ -82,6 +81,51 @@ met_avg[, region2 := fifelse(lat >= 39.71 & lon <= -98, "Northwest",
 met_avg[, table(region, region2, useNA = "always")]
 # Create a categorical variable for elevation as in the lecture slides
 met_avg[, elev_cat := fifelse(elev > 252, "high", "low")]
+
+# Deleting extra column
+met_avg <- met_avg[, -1]
 ```
 
+## 3. Use geom_violin to examine the wind speed and dew point temperature by region
+
+```{r violin-temp}
+ggplot(met_avg, mapping = aes(y = wind.sp, x = 1)) +
+  geom_violin() +
+  facet_grid(~region)
+```
+
+## 4. Use geom_jitter with stat_smooth to examine the association between dew point temperature and wind speed by region
+
+## 5
+
+## 6. Use stat_summary to examine mean dew point and wind speed by region with standard deviation error bars
+
+```{r plot-stat_summ}
+ggplot(
+  met_avg[!is.na(wind.sp) & !is.na(dew.point)],
+  mapping = aes(x = region, y = wind.sp)) +
+  stat_summary(fun.data = "mean_sdl") +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar")
+```
+
+## 7. Make a map showing the spatial trend in relative h in the US
+
+```{r leaflet}
+library(leaflet)
+
+temp.pal <- colorNumeric(c('darkgreen','goldenrod','brown'), domain=met_avg$rh)
+
+leaflet(met_avg) %>%
+  addProviderTiles('CartoDB.Positron') %>%
+  addCircles(
+    lat = ~lat, lng=~lon,
+                                                  # HERE IS OUR PAL!
+    label = ~paste0(round(rh,2), ' rh'), color = ~ temp.pal(rh),
+    opacity = 1, fillOpacity = 1, radius = 500
+    ) %>%
+  # And a pretty legend
+  addLegend('bottomleft', pal=temp.pal, values=met_avg$rh,
+          title='Temperature, C', opacity=1)
+  
+```
 
