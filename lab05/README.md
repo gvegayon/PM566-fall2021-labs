@@ -165,3 +165,44 @@ station_averages
     ## 1593:   4.151737  0.4310791
     ## 1594:   2.568944  4.4922623
     ## 1595:   2.568944  2.9131751
+
+## Question 3
+
+## Question 4
+
+Going back to the met dataset.
+
+``` r
+met[, state_temp := mean(temp, na.rm = TRUE), by = STATE]
+met[, temp_cat := fifelse(
+  state_temp < 20, "low-temp", 
+  fifelse(state_temp < 25, "mid-temp", "high-temp"))
+  ]
+```
+
+Let’s make sure that we don’t have NAs
+
+``` r
+table(met$temp_cat, useNA = "always")
+```
+
+    ## 
+    ## high-temp  low-temp  mid-temp      <NA> 
+    ##    811126    430794   1135423         0
+
+Now, let’s summarize
+
+``` r
+tab <- met[, .(
+  N_entries  = .N,
+  N_stations = length(unique(USAFID))
+), by = temp_cat]
+
+knitr::kable(tab)
+```
+
+| temp\_cat | N\_entries | N\_stations |
+|:----------|-----------:|------------:|
+| mid-temp  |    1135423 |         781 |
+| high-temp |     811126 |         555 |
+| low-temp  |     430794 |         259 |

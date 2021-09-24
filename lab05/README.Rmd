@@ -125,8 +125,35 @@ station_averages[, eudist := sqrt(
 station_averages
 ```
 
+## Question 3
 
+## Question 4
 
+Going back to the met dataset.
 
+```{r}
+met[, state_temp := mean(temp, na.rm = TRUE), by = STATE]
+met[, temp_cat := fifelse(
+  state_temp < 20, "low-temp", 
+  fifelse(state_temp < 25, "mid-temp", "high-temp"))
+  ]
+```
+
+Let's make sure that we don't have NAs
+
+```{r}
+table(met$temp_cat, useNA = "always")
+```
+
+Now, let's summarize
+
+```{r}
+tab <- met[, .(
+  N_entries  = .N,
+  N_stations = length(unique(USAFID))
+), by = temp_cat]
+
+knitr::kable(tab)
+```
 
 
