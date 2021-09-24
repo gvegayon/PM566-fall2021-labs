@@ -72,17 +72,61 @@ station_averages <- met[,.(
   temp      = mean(temp, na.rm = TRUE),
   wind.sp   = mean(wind.sp, na.rm = TRUE),
   atm.press = mean(atm.press, na.rm = TRUE)
-), by = USAFID]
+), by = .(USAFID)]
 ```
 
 Now, we need to identify the median per variable
 
 ```{r quantiles}
-station_averages[,.(
+medians <- station_averages[,.(
   temp_50      = quantile(temp, probs = .5, na.rm = TRUE),
   wind.sp_50   = quantile(wind.sp, probs = .5, na.rm = TRUE),
   atm.press_50 = quantile(atm.press, probs = .5, na.rm = TRUE)
 )]
+
+medians
 ```
+
+Now we can find the stations that are the closest to these. (hint: `which.min()`)
+
+```{r median-temp}
+station_averages[, temp_dist := abs(temp - medians$temp_50)]
+median_temp_station <- station_averages[order(temp_dist)][1]
+median_temp_station
+```
+
+The median temperature station is `r median_temp_station$USAFID`.
+
+## Question 2
+
+We first need to recover the state variable, by MERGING :)!
+
+```{r}
+station_averages <- merge(
+  x = station_averages, y = stations,
+  by.x = "USAFID", by.y = "USAF",
+  all.x = TRUE, all.y = FALSE
+  )
+```
+
+Now we can compute the median per state
+
+```{r}
+station_averages[, temp_50 := quantile(temp, probs = .5, na.rm = TRUE), by = STATE]
+station_averages[, wind.sp_50 := quantile(wind.sp, probs = .5, na.rm = TRUE), by = STATE]
+```
+
+Now, the euclidean distance... $\sqrt{\sum_i(x_i - y_i)^2}$
+
+```{r}
+station_averages[, eudist := sqrt(
+  (temp - temp_50)^2 + (wind.sp - wind.sp_50)^2
+  )]
+station_averages
+```
+
+
+
+
 
 
