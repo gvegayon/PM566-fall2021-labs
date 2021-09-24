@@ -1,6 +1,9 @@
 ---
 title: "Lab 4"
-output: github_document
+output:
+  - github_document:
+    html_preview: false
+  - html_document
 always_allow_html: true
 ---
 
@@ -110,7 +113,7 @@ ggplot(
 
 ## 7. Make a map showing the spatial trend in relative h in the US
 
-```{r leaflet}
+```{r leaflet, eval = knitr::is_html_output()}
 library(leaflet)
 
 temp.pal <- colorNumeric(c('darkgreen','goldenrod','brown'), domain=met_avg$rh)
@@ -126,6 +129,5 @@ leaflet(met_avg) %>%
   # And a pretty legend
   addLegend('bottomleft', pal=temp.pal, values=met_avg$rh,
           title='Temperature, C', opacity=1)
-  
 ```
 
