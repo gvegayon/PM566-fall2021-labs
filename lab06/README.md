@@ -92,6 +92,8 @@ mtsamples %>%
   unnest_tokens(output = word, input = transcription) %>%
   count(word, sort = TRUE) %>%
   anti_join(stop_words, by = "word") %>%
+  # Using regular expressions to remove numbers
+  filter(!grepl(pattern = "^[0-9]+$", x = word)) %>%
   top_n(20) %>%
   ggplot(aes(x = n, y = fct_reorder(word, n))) +
     geom_col()
@@ -101,4 +103,38 @@ mtsamples %>%
 
 ![](README_files/figure-gfm/token-transcript-wo-stop-1.png)<!-- -->
 
-Looking better, but we don’t like the numbers.
+Looking better~~, but we don’t like the numbers~~.
+
+## Question 4
+
+``` r
+mtsamples %>%
+  unnest_ngrams(output = bigram, input = transcription, n = 2) %>%
+  count(bigram, sort = TRUE) %>%
+  top_n(20) %>%
+  ggplot(aes(x = n, y = fct_reorder(bigram, n))) +
+    geom_col()
+```
+
+    ## Selecting by n
+
+![](README_files/figure-gfm/bigram-transcript-1.png)<!-- -->
+
+Using bi-grams is not very informative, let’s try with tri-grams
+instead.
+
+``` r
+mtsamples %>%
+  unnest_ngrams(output = trigram, input = transcription, n = 3) %>%
+  count(trigram, sort = TRUE) %>%
+  top_n(20) %>%
+  ggplot(aes(x = n, y = fct_reorder(trigram, n))) +
+    geom_col()
+```
+
+    ## Selecting by n
+
+![](README_files/figure-gfm/trigram-transcript-1.png)<!-- -->
+
+Now some phrases start to show up, e.g., “tolerated the procedure”,
+“prepped and draped.”
