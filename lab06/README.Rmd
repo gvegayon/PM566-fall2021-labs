@@ -1,0 +1,50 @@
+---
+title: "Lab 6"
+output:
+  github_document:
+  html_document:
+    html_preview: false
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(repos = c(CRAN = "http://cran.rstudio.com"))
+library(tidyverse)
+library(tidytext)
+```
+
+## Download the data
+
+```{r get-data}
+fn <- "mtsamples.csv"
+if (!file.exists(fn))
+  download.file("https://raw.githubusercontent.com/USCbiostats/data-science-data/master/00_mtsamples/mtsamples.csv", destfile = fn)
+
+mtsamples <- read.csv(fn)
+mtsamples <- as_tibble(mtsamples)
+```
+
+## Q1: How many and how are specialties distributed?
+
+```{r dist-of-specialties}
+specialties <- mtsamples %>%
+  count(medical_specialty)
+
+specialties %>%
+  arrange(desc(n)) %>%
+  top_n(15) %>%
+  knitr::kable()
+```
+
+There are `r nrow(specialties)` specialties. Let's take a look at the distribution:
+
+```{r dist}
+ggplot(mtsamples, aes(x = medical_specialty)) +
+  geom_histogram(stat = "count") +
+  coord_flip()
+```
+
+These are not evenly (uniformly) distributed.
+
+
