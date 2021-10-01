@@ -2,3 +2,14 @@
 .Rhistory
 .RData
 .Ruserdata
+*_cache
+
+# This is data
+*.gz
+*.csv
+
+# These are MS office files
+*.pptx
+*.ppt
+*.doc
+*.docx

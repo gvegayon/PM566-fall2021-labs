@@ -39,12 +39,34 @@ specialties %>%
 
 There are `r nrow(specialties)` specialties. Let's take a look at the distribution:
 
-```{r dist}
+```{r dist1}
+# Method 1 (not that pretty)
 ggplot(mtsamples, aes(x = medical_specialty)) +
   geom_histogram(stat = "count") +
   coord_flip()
 ```
 
+```{r dist2}
+# Method 2
+ggplot(specialties, aes(x = n, y = fct_reorder(medical_specialty, n))) +
+  geom_col()
+```
+
+
 These are not evenly (uniformly) distributed.
 
+## Question 2
+
+```{r token-transcript, cache = TRUE}
+mtsamples %>%
+  unnest_tokens(output = word, input = transcription) %>%
+  count(word, sort = TRUE) %>%
+  top_n(20) %>%
+  ggplot(aes(x = n, y = fct_reorder(word, n))) +
+    geom_col()
+```
+
+The word "patient" seems to be importat (duh!), but we observe a lot of stopwords.
+
+## Question 3
 

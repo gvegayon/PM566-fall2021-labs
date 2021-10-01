@@ -47,6 +47,7 @@ specialties %>%
 There are 40 specialties. Let’s take a look at the distribution:
 
 ``` r
+# Method 1 (not that pretty)
 ggplot(mtsamples, aes(x = medical_specialty)) +
   geom_histogram(stat = "count") +
   coord_flip()
@@ -54,6 +55,34 @@ ggplot(mtsamples, aes(x = medical_specialty)) +
 
     ## Warning: Ignoring unknown parameters: binwidth, bins, pad
 
-![](README_files/figure-gfm/dist-1.png)<!-- -->
+![](README_files/figure-gfm/dist1-1.png)<!-- -->
+
+``` r
+# Method 2
+ggplot(specialties, aes(x = n, y = fct_reorder(medical_specialty, n))) +
+  geom_col()
+```
+
+![](README_files/figure-gfm/dist2-1.png)<!-- -->
 
 These are not evenly (uniformly) distributed.
+
+## Question 2
+
+``` r
+mtsamples %>%
+  unnest_tokens(output = word, input = transcription) %>%
+  count(word, sort = TRUE) %>%
+  top_n(20) %>%
+  ggplot(aes(x = n, y = fct_reorder(word, n))) +
+    geom_col()
+```
+
+    ## Selecting by n
+
+![](README_files/figure-gfm/token-transcript-1.png)<!-- -->
+
+The word “patient” seems to be importat (duh!), but we observe a lot of
+stopwords.
+
+## Question 3
