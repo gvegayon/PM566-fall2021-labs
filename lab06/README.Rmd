@@ -8,7 +8,7 @@ always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 options(repos = c(CRAN = "http://cran.rstudio.com"))
 library(tidyverse)
 library(tidytext)
@@ -107,3 +107,46 @@ mtsamples %>%
 ```
 
 Now some phrases start to show up, e.g., "tolerated the procedure", "prepped and draped."
+
+## Question 5
+
+```{r history, cache = TRUE, warning=FALSE}
+bigrams <- mtsamples %>%
+  unnest_ngrams(output = bigram, input = transcription, n = 2) %>%
+  separate(bigram, into = c("w1", "w2"), sep = " ") %>%
+  filter((w1 == "history") | (w2 == "history"))
+
+bigrams %>%
+  filter(w1 == "history") %>%
+  select(w1, w2) %>%
+  count(w2, sort = TRUE)
+
+bigrams %>%
+  filter(w2 == "history") %>%
+  select(w1, w2) %>%
+  count(w1, sort = TRUE)
+```
+
+Since we are looking at single words again, it is a good idea to treat these as
+single tokens. So let's remove the stopwords and the numbers
+
+```{r history-wo-stop}
+bigrams %>%
+  filter(w1 == "history") %>%
+  filter(!(w2 %in% stop_words$word) & !grepl("^[0-9]+$", w2)) %>%
+  count(w2, sort = TRUE) %>%
+  top_n(10) %>%
+  knitr::kable(caption = "Words AFTER 'history'")
+
+bigrams %>%
+  filter(w2 == "history") %>%
+  filter(!(w1 %in% stop_words$word) & !grepl("^[0-9]+$", w1)) %>%
+  count(w1, sort = TRUE) %>%
+  top_n(10) %>%
+  knitr::kable(caption = "Words BEFORE 'history'")
+```
+
+
+
+
+
