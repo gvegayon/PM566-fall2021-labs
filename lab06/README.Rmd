@@ -70,3 +70,14 @@ The word "patient" seems to be importat (duh!), but we observe a lot of stopword
 
 ## Question 3
 
+```{r token-transcript-wo-stop, cache = TRUE}
+mtsamples %>%
+  unnest_tokens(output = word, input = transcription) %>%
+  count(word, sort = TRUE) %>%
+  anti_join(stop_words, by = "word") %>%
+  top_n(20) %>%
+  ggplot(aes(x = n, y = fct_reorder(word, n))) +
+    geom_col()
+```
+
+Looking better, but we don't like the numbers.

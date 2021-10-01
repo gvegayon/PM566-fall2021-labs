@@ -86,3 +86,19 @@ The word “patient” seems to be importat (duh!), but we observe a lot of
 stopwords.
 
 ## Question 3
+
+``` r
+mtsamples %>%
+  unnest_tokens(output = word, input = transcription) %>%
+  count(word, sort = TRUE) %>%
+  anti_join(stop_words, by = "word") %>%
+  top_n(20) %>%
+  ggplot(aes(x = n, y = fct_reorder(word, n))) +
+    geom_col()
+```
+
+    ## Selecting by n
+
+![](README_files/figure-gfm/token-transcript-wo-stop-1.png)<!-- -->
+
+Looking better, but we don’t like the numbers.
