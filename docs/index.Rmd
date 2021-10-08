@@ -104,4 +104,49 @@ publications_txt <- as.character(publications)
 ```
 
 
+## Q4
+
+
+```{r univ-insti}
+institution <- str_extract_all(
+  str_to_lower(publications_txt),
+  "university\\s+of\\s+(southern|new|northern|the)?\\s*[[:alpha:]-]+|[[:alpha:]-]+\\s+institute\\s+of\\s+[[:alpha:]-]+"
+  ) 
+institution <- unlist(institution)
+table(institution)
+```
+
+You do the school one
+
+## Q5 
+
+```{r}
+pub_char_list <- xml2::xml_children(publications)
+pub_char_list <- sapply(pub_char_list, as.character)
+```
+
+Geitting the abstracts
+
+```{r}
+abstracts <- str_extract(pub_char_list, "<Abstract>[[:print:][:space:]]+</Abstract>")
+abstracts <- str_remove_all(abstracts, "</?[[:alnum:]- =\"]+>") # '</?[[:alnum:]- ="]+>'
+abstracts <- str_replace_all(abstracts, "[[:space:]]+", " ")
+```
+
+```{r}
+titles <- str_extract(pub_char_list, "<ArticleTitle>[[:print:][:space:]]+</ArticleTitle>")
+titles <- str_remove_all(titles, "</?[[:alnum:]- =\"]+>")
+```
+
+Finally, the dataset
+
+```{r}
+database <- data.frame(
+  PubMedId = ids,
+  Title    = titles,
+  Abstract = abstracts
+)
+knitr::kable(database[1:20,], caption = "Some papers about Covid19 and Hawaii")
+```
+
 
