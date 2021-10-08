@@ -30,6 +30,9 @@ website <- xml2::read_html("https://pubmed.ncbi.nlm.nih.gov/?term=sars-cov-2")
 # Finding the counts
 counts <- xml2::xml_find_first(website, "/html/body/main/div[9]/div[2]/div[2]/div[1]/span")
 
+xml2::xml_find_first(website, "//*[@id=\"search-results\"]/div[2]/div[1]/span")
+xml2::xml_find_first(website, '//*[@id="search-results"]/div[2]/div[1]/span')
+
 # Turning it into text
 # or xml2::xml_text(counts)
 counts <- as.character(counts)
@@ -40,5 +43,31 @@ stringr::str_extract(counts, "[[:digit:],]+")
 stringr::str_replace(counts, "[^[:digit:]]+([[:digit:]]+),([[:digit:]]+)[^[:digit:]]+", "\\1\\2")
 ```
 
+## Q2
 
+```{r hawaii}
+library(httr)
+query_ids <- GET(
+  url   = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+  query = list(
+    db     = "pubmed",
+    term   = "covid19 hawaii",
+    retmax = 1000
+    )
+)
+
+GET(
+  url   = "https://eutils.ncbi.nlm.nih.gov/",
+  path  = "entrez/eutils/esearch.fcgi",
+  query = list(
+    db     = "pubmed",
+    term   = "covid19 hawaii",
+    retmax = 1000
+    )
+)
+
+# Extracting the content of the response of GET
+ids <- httr::content(query_ids)
+ids
+```
 
