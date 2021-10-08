@@ -168,8 +168,29 @@ pre code {
 </div>
 
 
-<div id="download-the-data" class="section level2">
-<h2>Download the data</h2>
+<pre class="r"><code>if (knitr::is_html_output(excludes = &quot;gfm&quot;)) {
+  
+}</code></pre>
+<pre><code>## NULL</code></pre>
+<div id="question-1-how-many-sars-cov-2-papers" class="section level2">
+<h2>Question 1: How many sars-cov-2 papers?</h2>
+<pre class="r"><code># Downloading the website
+website &lt;- xml2::read_html(&quot;https://pubmed.ncbi.nlm.nih.gov/?term=sars-cov-2&quot;)
+
+# Finding the counts
+counts &lt;- xml2::xml_find_first(website, &quot;/html/body/main/div[9]/div[2]/div[2]/div[1]/span&quot;)
+
+# Turning it into text
+# or xml2::xml_text(counts)
+counts &lt;- as.character(counts)
+
+# Extracting the data using regex
+stringr::str_extract(counts, &quot;[0-9,]+&quot;)</code></pre>
+<pre><code>## [1] &quot;114,592&quot;</code></pre>
+<pre class="r"><code>stringr::str_extract(counts, &quot;[[:digit:],]+&quot;)</code></pre>
+<pre><code>## [1] &quot;114,592&quot;</code></pre>
+<pre class="r"><code>stringr::str_replace(counts, &quot;[^[:digit:]]+([[:digit:]]+),([[:digit:]]+)[^[:digit:]]+&quot;, &quot;\\1\\2&quot;)</code></pre>
+<pre><code>## [1] &quot;114592&quot;</code></pre>
 </div>
 
 
