@@ -1,9 +1,9 @@
 ---
 title: "Lab 7"
 output:
-  github_document: default
-  html_document:
+  github_document: 
     html_preview: false
+  html_document: default
   word_document: default
 always_allow_html: true
 ---
@@ -70,4 +70,38 @@ GET(
 ids <- httr::content(query_ids)
 ids
 ```
+
+## Q3
+
+```{r analyzing}
+# Turn the result into a character vector
+ids <- as.character(ids)
+
+# Find all the ids 
+ids <- stringr::str_extract_all(ids, "<Id>[[:digit:]]+</Id>")[[1]]
+
+# Remove all the leading and trailing <Id> </Id>. Make use of "|"
+# stringr::str_remove_all(ids, "</?Id>")
+ids <- stringr::str_remove_all(ids, "<Id>|</Id>")
+head(ids)
+```
+
+```{r retrieving-papers}
+publications <- GET(
+  url   = "https://eutils.ncbi.nlm.nih.gov/",
+  path  = "entrez/eutils/efetch.fcgi",
+  query = list(
+    db = "pubmed",
+    id = I(paste(ids, collapse=",")),
+    retmax = 1000,
+    rettype = "abstract"
+    )
+)
+
+# Turning the output into character vector
+publications <- httr::content(publications)
+publications_txt <- as.character(publications)
+```
+
+
 

@@ -220,7 +220,7 @@ GET(
     )
 )</code></pre>
 <pre><code>## Response [https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&amp;term=covid19%20hawaii&amp;retmax=1000]
-##   Date: 2021-10-08 18:14
+##   Date: 2021-10-08 18:45
 ##   Status: 200
 ##   Content-Type: text/xml; charset=UTF-8
 ##   Size: 4.28 kB
@@ -247,6 +247,34 @@ ids</code></pre>
 ## [5] &lt;TranslationSet&gt;\n  &lt;Translation&gt;\n    &lt;From&gt;covid19&lt;/From&gt;\n    &lt;To&gt;&quot;cov ...
 ## [6] &lt;TranslationStack&gt;\n  &lt;TermSet&gt;\n    &lt;Term&gt;&quot;covid-19&quot;[MeSH Terms]&lt;/Term&gt;\ ...
 ## [7] &lt;QueryTranslation&gt;(&quot;covid-19&quot;[MeSH Terms] OR &quot;covid-19&quot;[All Fields] OR &quot;c ...</code></pre>
+</div>
+<div id="q3" class="section level2">
+<h2>Q3</h2>
+<pre class="r"><code># Turn the result into a character vector
+ids &lt;- as.character(ids)
+
+# Find all the ids 
+ids &lt;- stringr::str_extract_all(ids, &quot;&lt;Id&gt;[[:digit:]]+&lt;/Id&gt;&quot;)[[1]]
+
+# Remove all the leading and trailing &lt;Id&gt; &lt;/Id&gt;. Make use of &quot;|&quot;
+# stringr::str_remove_all(ids, &quot;&lt;/?Id&gt;&quot;)
+ids &lt;- stringr::str_remove_all(ids, &quot;&lt;Id&gt;|&lt;/Id&gt;&quot;)
+head(ids)</code></pre>
+<pre><code>## [1] &quot;34562997&quot; &quot;34559481&quot; &quot;34545941&quot; &quot;34536350&quot; &quot;34532685&quot; &quot;34529634&quot;</code></pre>
+<pre class="r"><code>publications &lt;- GET(
+  url   = &quot;https://eutils.ncbi.nlm.nih.gov/&quot;,
+  path  = &quot;entrez/eutils/efetch.fcgi&quot;,
+  query = list(
+    db = &quot;pubmed&quot;,
+    id = I(paste(ids, collapse=&quot;,&quot;)),
+    retmax = 1000,
+    rettype = &quot;abstract&quot;
+    )
+)
+
+# Turning the output into character vector
+publications &lt;- httr::content(publications)
+publications_txt &lt;- as.character(publications)</code></pre>
 </div>
 
 

@@ -77,7 +77,7 @@ GET(
 ```
 
     ## Response [https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=covid19%20hawaii&retmax=1000]
-    ##   Date: 2021-10-08 18:14
+    ##   Date: 2021-10-08 18:45
     ##   Status: 200
     ##   Content-Type: text/xml; charset=UTF-8
     ##   Size: 4.28 kB
@@ -108,3 +108,37 @@ ids
     ## [5] <TranslationSet>\n  <Translation>\n    <From>covid19</From>\n    <To>"cov ...
     ## [6] <TranslationStack>\n  <TermSet>\n    <Term>"covid-19"[MeSH Terms]</Term>\ ...
     ## [7] <QueryTranslation>("covid-19"[MeSH Terms] OR "covid-19"[All Fields] OR "c ...
+
+## Q3
+
+``` r
+# Turn the result into a character vector
+ids <- as.character(ids)
+
+# Find all the ids 
+ids <- stringr::str_extract_all(ids, "<Id>[[:digit:]]+</Id>")[[1]]
+
+# Remove all the leading and trailing <Id> </Id>. Make use of "|"
+# stringr::str_remove_all(ids, "</?Id>")
+ids <- stringr::str_remove_all(ids, "<Id>|</Id>")
+head(ids)
+```
+
+    ## [1] "34562997" "34559481" "34545941" "34536350" "34532685" "34529634"
+
+``` r
+publications <- GET(
+  url   = "https://eutils.ncbi.nlm.nih.gov/",
+  path  = "entrez/eutils/efetch.fcgi",
+  query = list(
+    db = "pubmed",
+    id = I(paste(ids, collapse=",")),
+    retmax = 1000,
+    rettype = "abstract"
+    )
+)
+
+# Turning the output into character vector
+publications <- httr::content(publications)
+publications_txt <- as.character(publications)
+```
