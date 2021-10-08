@@ -1,0 +1,19 @@
+---
+title: "Lab 7"
+output:
+  github_document: default
+  html_document:
+    html_preview: false
+  word_document: default
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+options(repos = c(CRAN = "http://cran.rstudio.com"))
+library(tidyverse)
+library(tidytext)
+```
+
+## Download the data
+
