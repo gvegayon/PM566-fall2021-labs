@@ -179,7 +179,6 @@ pre code {
   x
 }
 
-
 fun1alt &lt;- function(n = 100, k = 4, lambda = 4) {
   matrix(rpois(n * k, lambda), nrow = n, ncol = k, byrow = TRUE)
 }
@@ -189,9 +188,9 @@ microbenchmark::microbenchmark(
   fun1alt(n = 1000), unit=&quot;relative&quot;
 )</code></pre>
 <pre><code>## Unit: relative
-##               expr     min       lq     mean   median       uq      max neval
-##     fun1(n = 1000) 32.8928 34.89461 36.39423 40.23999 43.68305 7.789755   100
-##  fun1alt(n = 1000)  1.0000  1.00000  1.00000  1.00000  1.00000 1.000000   100</code></pre>
+##               expr      min       lq     mean   median       uq      max neval
+##     fun1(n = 1000) 32.38425 33.11598 34.43577 38.02322 39.24043 5.553571   100
+##  fun1alt(n = 1000)  1.00000  1.00000  1.00000  1.00000  1.00000 1.000000   100</code></pre>
 </div>
 <div id="problem-3" class="section level2">
 <h2>Problem 3</h2>
@@ -205,13 +204,27 @@ fun2 &lt;- function(x) {
 }
 
 fun2alt &lt;- function(x) {
-  # YOUR CODE HERE
+  # Position of the max value per row of x.
+  idx &lt;- max.col(t(x)) 
+  
+  # Do something to get the actual max value
+  # x[cbind(1, 15)] ~ x[1, 15]
+  # Want to access x[1, 16], x[4, 1]
+  # x[rbind(c(1, 16), c(4, 1))]
+  # Want to access x[4, 16], x[4, 1]
+  # x[cbind(4, c(16, 1))]
+  x[ cbind(idx, 1:ncol(x)) ]
 }
+
+# Do we get the same?
+all(fun2(x) == fun2alt(x))
+
+x &lt;- matrix(rnorm(5e4), nrow=10)
 
 # Benchmarking
 microbenchmark::microbenchmark(
-  fun2(),
-  fun2alt()
+  fun2(x),
+  fun2alt(x), unit = &quot;relative&quot;
 )</code></pre>
 </div>
 
