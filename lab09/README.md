@@ -24,9 +24,9 @@ microbenchmark::microbenchmark(
 ```
 
     ## Unit: relative
-    ##               expr      min       lq     mean   median      uq      max neval
-    ##     fun1(n = 1000) 32.15679 33.82955 35.03031 39.53402 44.4096 8.818185   100
-    ##  fun1alt(n = 1000)  1.00000  1.00000  1.00000  1.00000  1.0000 1.000000   100
+    ##               expr      min       lq     mean   median       uq    max neval
+    ##     fun1(n = 1000) 32.34988 37.95344 34.95931 42.49921 45.66267 6.9312   100
+    ##  fun1alt(n = 1000)  1.00000  1.00000  1.00000  1.00000  1.00000 1.0000   100
 
 ## Problem 3
 
@@ -55,7 +55,11 @@ fun2alt <- function(x) {
 
 # Do we get the same?
 all(fun2(x) == fun2alt(x))
+```
 
+    ## [1] TRUE
+
+``` r
 x <- matrix(rnorm(5e4), nrow=10)
 
 # Benchmarking
@@ -64,3 +68,8 @@ microbenchmark::microbenchmark(
   fun2alt(x), unit = "relative"
 )
 ```
+
+    ## Unit: relative
+    ##        expr      min     lq     mean   median       uq     max neval
+    ##     fun2(x) 11.58521 12.525 11.54892 13.05829 11.98592 3.38403   100
+    ##  fun2alt(x)  1.00000  1.000  1.00000  1.00000  1.00000 1.00000   100

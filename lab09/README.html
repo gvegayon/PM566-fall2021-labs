@@ -188,9 +188,9 @@ microbenchmark::microbenchmark(
   fun1alt(n = 1000), unit=&quot;relative&quot;
 )</code></pre>
 <pre><code>## Unit: relative
-##               expr      min       lq     mean   median       uq      max neval
-##     fun1(n = 1000) 32.38425 33.11598 34.43577 38.02322 39.24043 5.553571   100
-##  fun1alt(n = 1000)  1.00000  1.00000  1.00000  1.00000  1.00000 1.000000   100</code></pre>
+##               expr     min       lq     mean   median       uq      max neval
+##     fun1(n = 1000) 32.4748 35.63752 35.40216 38.87017 37.66506 6.538546   100
+##  fun1alt(n = 1000)  1.0000  1.00000  1.00000  1.00000  1.00000 1.000000   100</code></pre>
 </div>
 <div id="problem-3" class="section level2">
 <h2>Problem 3</h2>
@@ -217,15 +217,19 @@ fun2alt &lt;- function(x) {
 }
 
 # Do we get the same?
-all(fun2(x) == fun2alt(x))
-
-x &lt;- matrix(rnorm(5e4), nrow=10)
+all(fun2(x) == fun2alt(x))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>x &lt;- matrix(rnorm(5e4), nrow=10)
 
 # Benchmarking
 microbenchmark::microbenchmark(
   fun2(x),
   fun2alt(x), unit = &quot;relative&quot;
 )</code></pre>
+<pre><code>## Unit: relative
+##        expr      min       lq     mean   median       uq    max neval
+##     fun2(x) 11.71539 11.26494 11.23826 11.49111 11.61645 4.7036   100
+##  fun2alt(x)  1.00000  1.00000  1.00000  1.00000  1.00000 1.0000   100</code></pre>
 </div>
 
 
