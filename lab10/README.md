@@ -180,5 +180,53 @@ dbFetch(q, n = 10)
     ## 10      16320         411        2       972   1.99 2007-01-30 18:49:33.996577
 
 ``` r
+dbClearResult(q)
+```
+
+## 4.2
+
+``` r
+dbGetQuery(con, "
+SELECT *
+FROM payment
+WHERE amount > 5 LIMIT 5")
+```
+
+    ##   payment_id customer_id staff_id rental_id amount               payment_date
+    ## 1      16052         269        2       678   6.99 2007-01-28 21:44:14.996577
+    ## 2      16058         271        1      1096   8.99 2007-01-31 11:59:15.996577
+    ## 3      16060         272        1       405   6.99 2007-01-27 12:01:05.996577
+    ## 4      16061         272        1      1041   6.99 2007-01-31 04:14:49.996577
+    ## 5      16068         274        1       394   5.99 2007-01-27 09:54:37.996577
+
+Bonus: Count how many are
+
+``` r
+dbGetQuery(con, "
+SELECT COUNT(*)
+FROM payment
+WHERE amount > 5")
+```
+
+    ##   COUNT(*)
+    ## 1      266
+
+Counting per `staff_id`
+
+``` r
+dbGetQuery(con, "
+SELECT staff_id, COUNT(*) AS N
+FROM payment
+/* GROUP BY goes AFTER WHERE*/
+WHERE amount > 5
+GROUP BY staff_id
+")
+```
+
+    ##   staff_id   N
+    ## 1        1 151
+    ## 2        2 115
+
+``` r
 dbDisconnect(con)
 ```

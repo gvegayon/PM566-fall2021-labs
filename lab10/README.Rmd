@@ -111,7 +111,39 @@ WHERE amount IN (1.99, 7.99, 9.99)"
 )
 dbFetch(q, n = 10)
 dbFetch(q, n = 10)
+dbClearResult(q)
 ```
+
+## 4.2
+
+```{r}
+dbGetQuery(con, "
+SELECT *
+FROM payment
+WHERE amount > 5 LIMIT 5")
+```
+
+Bonus: Count how many are
+
+```{r}
+dbGetQuery(con, "
+SELECT COUNT(*)
+FROM payment
+WHERE amount > 5")
+```
+
+Counting per `staff_id`
+
+```{r}
+dbGetQuery(con, "
+SELECT staff_id, COUNT(*) AS N
+FROM payment
+/* GROUP BY goes AFTER WHERE*/
+WHERE amount > 5
+GROUP BY staff_id
+")
+```
+
 
 
 ```{r cleaning}
