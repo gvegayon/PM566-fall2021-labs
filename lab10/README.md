@@ -227,6 +227,21 @@ GROUP BY staff_id
     ## 1        1 151
     ## 2        2 115
 
+# Question 5
+
+``` r
+dbGetQuery(con, "
+SELECT p.payment_id, p.amount
+FROM payment AS p
+  INNER JOIN customer AS c ON p.customer_id = c.customer_id
+WHERE c.last_name = 'DAVIS'")
+```
+
+    ##   payment_id amount
+    ## 1      16685   4.99
+    ## 2      16686   2.99
+    ## 3      16687   0.99
+
 ``` r
 dbDisconnect(con)
 ```

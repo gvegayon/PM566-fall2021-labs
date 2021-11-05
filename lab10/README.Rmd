@@ -144,6 +144,15 @@ GROUP BY staff_id
 ")
 ```
 
+# Question 5
+
+```{r}
+dbGetQuery(con, "
+SELECT p.payment_id, p.amount
+FROM payment AS p
+  INNER JOIN customer AS c ON p.customer_id = c.customer_id
+WHERE c.last_name = 'DAVIS'")
+```
 
 
 ```{r cleaning}
