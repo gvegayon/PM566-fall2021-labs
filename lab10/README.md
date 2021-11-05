@@ -97,6 +97,88 @@ WHERE last_name IN ('WILLIAMS', 'DAVIS')")
     ## 5      137     MORGAN  WILLIAMS
     ## 6      172    GROUCHO  WILLIAMS
 
+# Question 3
+
+``` r
+dbGetQuery(con, "PRAGMA table_info(rental)")
+```
+
+    ##   cid         name    type notnull dflt_value pk
+    ## 1   0    rental_id INTEGER       0         NA  0
+    ## 2   1  rental_date    TEXT       0         NA  0
+    ## 3   2 inventory_id INTEGER       0         NA  0
+    ## 4   3  customer_id INTEGER       0         NA  0
+    ## 5   4  return_date    TEXT       0         NA  0
+    ## 6   5     staff_id INTEGER       0         NA  0
+    ## 7   6  last_update    TEXT       0         NA  0
+
+``` r
+dbGetQuery(con," 
+SELECT DISTINCT customer_id 
+FROM rental
+WHERE date(rental_date) = '2005-07-05' LIMIT 5")
+```
+
+    ##   customer_id
+    ## 1         565
+    ## 2         242
+    ## 3          37
+    ## 4          60
+    ## 5         594
+
+# Question 4
+
+``` r
+dbGetQuery(con, "PRAGMA table_info(payment)")
+```
+
+    ##   cid         name    type notnull dflt_value pk
+    ## 1   0   payment_id INTEGER       0         NA  0
+    ## 2   1  customer_id INTEGER       0         NA  0
+    ## 3   2     staff_id INTEGER       0         NA  0
+    ## 4   3    rental_id INTEGER       0         NA  0
+    ## 5   4       amount    REAL       0         NA  0
+    ## 6   5 payment_date    TEXT       0         NA  0
+
+## 4.1
+
+``` r
+q <- dbSendQuery(con, "
+SELECT *
+FROM payment
+WHERE amount IN (1.99, 7.99, 9.99)"
+)
+dbFetch(q, n = 10)
+```
+
+    ##    payment_id customer_id staff_id rental_id amount               payment_date
+    ## 1       16050         269        2         7   1.99 2007-01-24 21:40:19.996577
+    ## 2       16056         270        1       193   1.99 2007-01-26 05:10:14.996577
+    ## 3       16081         282        2        48   1.99 2007-01-25 04:49:12.996577
+    ## 4       16103         294        1       595   1.99 2007-01-28 12:28:20.996577
+    ## 5       16133         307        1       614   1.99 2007-01-28 14:01:54.996577
+    ## 6       16158         316        1      1065   1.99 2007-01-31 07:23:22.996577
+    ## 7       16160         318        1       224   9.99 2007-01-26 08:46:53.996577
+    ## 8       16161         319        1        15   9.99 2007-01-24 23:07:48.996577
+    ## 9       16180         330        2       967   7.99 2007-01-30 17:40:32.996577
+    ## 10      16206         351        1      1137   1.99 2007-01-31 17:48:40.996577
+
+``` r
+dbFetch(q, n = 10)
+```
+
+    ##    payment_id customer_id staff_id rental_id amount               payment_date
+    ## 1       16210         354        2       158   1.99 2007-01-25 23:55:37.996577
+    ## 2       16240         369        2       913   7.99 2007-01-30 09:33:24.996577
+    ## 3       16275         386        1       583   7.99 2007-01-28 10:17:21.996577
+    ## 4       16277         387        1       697   7.99 2007-01-29 00:32:30.996577
+    ## 5       16289         391        1       891   7.99 2007-01-30 06:11:38.996577
+    ## 6       16302         400        2       516   1.99 2007-01-28 01:40:13.996577
+    ## 7       16306         401        2       811   1.99 2007-01-29 17:59:08.996577
+    ## 8       16307         402        2       801   1.99 2007-01-29 16:04:16.996577
+    ## 9       16314         407        1       619   7.99 2007-01-28 14:20:52.996577
+    ## 10      16320         411        2       972   1.99 2007-01-30 18:49:33.996577
+
 ``` r
 dbDisconnect(con)
 ```
