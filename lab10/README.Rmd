@@ -218,6 +218,22 @@ FROM payment GROUP BY customer_id
 LIMIT 5")
 ```
 
+## 7.2
+
+```{r}
+dbGetQuery(con, "
+SELECT 
+  customer_id,
+  COUNT(*) AS N,
+  MAX(amount) AS `max`,
+  MIN(amount) AS `min`,
+  AVG(amount) AS `avg`,
+  SUM(amount) AS `sum`
+FROM payment
+GROUP BY customer_id
+HAVING COUNT(*) > 5
+")
+```
 
 ```{r cleaning}
 dbDisconnect(con)
