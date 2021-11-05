@@ -242,6 +242,42 @@ WHERE c.last_name = 'DAVIS'")
     ## 2      16686   2.99
     ## 3      16687   0.99
 
+# Question 6
+
+## 6.1
+
+``` r
+dbGetQuery(con, "
+SELECT customer_id, COUNT(*) AS 'N Rentals'
+FROM rental GROUP BY customer_id
+LIMIT 5
+")
+```
+
+    ##   customer_id N Rentals
+    ## 1           1        32
+    ## 2           2        27
+    ## 3           3        26
+    ## 4           4        22
+    ## 5           5        38
+
+## 6.2
+
+``` r
+dbGetQuery(con, "
+SELECT customer_id, COUNT(*) AS 'N Rentals'
+FROM rental GROUP BY customer_id
+ORDER BY `N Rentals` LIMIT 5
+")
+```
+
+    ##   customer_id N Rentals
+    ## 1         318        12
+    ## 2          61        14
+    ## 3         110        14
+    ## 4         281        14
+    ## 5         136        15
+
 ``` r
 dbDisconnect(con)
 ```
