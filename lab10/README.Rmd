@@ -1,0 +1,69 @@
+---
+title: "Lab 10"
+output:
+  github_document:
+    html_preview: false
+  html_document: default
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+options(repos = c(CRAN = "http://cran.rstudio.com"))
+```
+
+```{r setup-cons}
+library(RSQLite)
+library(DBI)
+
+# Initialize a temporary in memory database
+con <- dbConnect(SQLite(), ":memory:")
+
+# Download tables
+actor <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/actor.csv")
+rental <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/rental.csv")
+customer <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/customer.csv")
+payment <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/payment_p2007_01.csv")
+
+# Copy data.frames to database
+dbWriteTable(con, "actor", actor)
+dbWriteTable(con, "rental", rental)
+dbWriteTable(con, "customer", customer)
+dbWriteTable(con, "payment", payment)
+```
+
+Are the tables there?
+
+```{r}
+dbListTables(con)
+```
+
+You can also use knitr + SQL!
+
+```{sql, connection=con, output.var="x1"}
+PRAGMA table_info(actor)
+```
+
+```{r}
+x1
+```
+
+This is equivalent to use `dbGetQuery`
+
+```{r}
+dbGetQuery(con, "PRAGMA table_info(actor)")
+```
+
+
+# Question 1
+
+```{r}
+
+```
+
+
+```{r cleaning}
+dbDisconnect(con)
+```
+
+
