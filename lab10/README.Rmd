@@ -69,9 +69,17 @@ ORDER by last_name, first_name
 LIMIT 5")
 ```
 
+# Question 2
+
+```{r}
+dbGetQuery(con, "
+/* This is COMMENT! */
+SELECT actor_id, first_name, last_name
+FROM actor /* YOU CAN ADD COMMENTS USING
+MULTIPLE LINES! */
+WHERE last_name IN ('WILLIAMS', 'DAVIS')")
+```
 
 ```{r cleaning}
 dbDisconnect(con)
 ```
-
-
