@@ -59,6 +59,25 @@ dbGetQuery(con, "PRAGMA table_info(actor)")
 
 # Question 1
 
+AND using the LIMIT clause (`head()` in R) to just show the first 5
+
+``` r
+dbGetQuery(con, "
+/* This is COMMENT! */
+SELECT actor_id, first_name, last_name
+FROM actor /* YOU CAN ADD COMMENTS USING
+MULTIPLE LINES! */
+ORDER by last_name, first_name 
+LIMIT 5")
+```
+
+    ##   actor_id first_name last_name
+    ## 1       58  CHRISTIAN    AKROYD
+    ## 2      182     DEBBIE    AKROYD
+    ## 3       92    KIRSTEN    AKROYD
+    ## 4      118       CUBA     ALLEN
+    ## 5      145        KIM     ALLEN
+
 ``` r
 dbDisconnect(con)
 ```
