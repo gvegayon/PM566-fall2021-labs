@@ -172,9 +172,52 @@ LIMIT 5
 dbGetQuery(con, "
 SELECT customer_id, COUNT(*) AS 'N Rentals'
 FROM rental GROUP BY customer_id
-ORDER BY `N Rentals` LIMIT 5
+/*
+This is equivalent to
+ORDER BY -`N Rentals` LIMIT 5
+*/
+ORDER BY `N Rentals` DESC LIMIT 5
 ")
 ```
+
+## 6.4
+
+```{r}
+dbGetQuery(con, "
+SELECT customer_id, COUNT(*) AS 'N Rentals'
+FROM rental GROUP BY customer_id
+HAVING `N Rentals` >= 40
+ORDER BY `N Rentals` 
+")
+```
+
+# Question 7
+
+```{r}
+dbGetQuery(con, "
+SELECT 
+  MAX(amount) AS `max`,
+  MIN(amount) AS `min`,
+  AVG(amount) AS `avg`,
+  SUM(amount) AS `sum`
+FROM payment")
+```
+
+
+## 7.1
+
+```{r}
+dbGetQuery(con, "
+SELECT 
+  customer_id,
+  MAX(amount) AS `max`,
+  MIN(amount) AS `min`,
+  AVG(amount) AS `avg`,
+  SUM(amount) AS `sum`
+FROM payment GROUP BY customer_id
+LIMIT 5")
+```
+
 
 ```{r cleaning}
 dbDisconnect(con)
